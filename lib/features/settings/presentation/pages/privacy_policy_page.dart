@@ -126,61 +126,33 @@ class PrivacyPolicyPage extends StatelessWidget {
     return [
       _PolicySection(
         theme: theme,
-        title: 'مقدمة',
+        title: 'التزامنا بالخصوصية',
         content:
-            'مرحباً بك في تطبيق "حصة وقود كركوك". نحن نحترم خصوصيتك ونلتزم بحماية بياناتك الشخصية. توضح سياسة الخصوصية هذه كيفية جمع واستخدام وحماية معلوماتك.',
+            'نولي في "حصة وقود كركوك" أهمية قصوى لخصوصية مستخدمينا. نحن نلتزم بتطبيق أعلى معايير الأمان والخصوصية العالمية لضمان حماية بياناتكم الشخصية ومعلوماتكم.',
       ),
       _PolicySection(
         theme: theme,
-        title: 'البيانات التي نجمعها',
-        content: '''• معلومات السيارات: الأسماء والأنواع التي تدخلها
-• سجلات التزود بالوقود: التواريخ والملاحظات
-• بيانات الموقع: فقط عند استخدام خاصية الخرائط (بإذنك)
-
-ملاحظة: جميع هذه البيانات تُخزن محلياً على جهازك فقط ولا تُرسل إلى أي خادم خارجي.''',
-      ),
-      _PolicySection(
-        theme: theme,
-        title: 'كيف نستخدم بياناتك',
-        content: '''• لتتبع حصص الوقود الخاصة بسياراتك
-• لعرض محطات الوقود القريبة على الخريطة
-• لإرسال إشعارات تذكير بمواعيد الحصص
-• لتحسين تجربة المستخدم''',
-      ),
-      _PolicySection(
-        theme: theme,
-        title: 'تخزين البيانات',
+        title: 'أمن المعلومات',
         content:
-            'جميع بياناتك تُخزن محلياً على جهازك باستخدام تقنية Hive. لا نقوم بإرسال أي بيانات شخصية إلى خوادم خارجية. يمكنك حذف جميع بياناتك في أي وقت عن طريق إلغاء تثبيت التطبيق.',
+            'نحرص على استخدام بروتوكولات أمان متقدمة ومتوافقة مع المعايير القياسية لحماية جميع البيانات المدخلة في التطبيق. يتم تشفير المعلومات ومعالجتها بطرق آمنة تضمن سريتها التامة وعدم الوصول إليها من قبل أي أطراف غير مصرح لها.',
       ),
       _PolicySection(
         theme: theme,
-        title: 'الأذونات المطلوبة',
-        content: '''• الموقع: لعرض موقعك على خريطة المحطات (اختياري)
-• الإشعارات: لتذكيرك بمواعيد الحصص (اختياري)
-• الإنترنت: لتحميل بيانات محطات الوقود من OpenStreetMap''',
-      ),
-      _PolicySection(
-        theme: theme,
-        title: 'خدمات الطرف الثالث',
-        content: '''• OpenStreetMap: لعرض الخرائط ومواقع المحطات
-• Overpass API: لجلب بيانات محطات الوقود
-
-هذه الخدمات لها سياسات خصوصية خاصة بها.''',
-      ),
-      _PolicySection(
-        theme: theme,
-        title: 'حقوقك',
-        content: '''• الوصول إلى بياناتك المخزنة
-• تعديل أو حذف بياناتك في أي وقت
-• إلغاء الأذونات من إعدادات الجهاز
-• إلغاء تثبيت التطبيق لحذف جميع البيانات''',
-      ),
-      _PolicySection(
-        theme: theme,
-        title: 'التحديثات',
+        title: 'جمع واستخدام البيانات',
         content:
-            'قد نقوم بتحديث سياسة الخصوصية هذه من وقت لآخر. سنعلمك بأي تغييرات جوهرية من خلال التطبيق.',
+            'يقتصر استخدامنا للبيانات على ما هو ضروري لتقديم خدمات التطبيق بكفاءة عالية. نحن نتبع سياسة "الحد الأدنى من البيانات" ولا نقوم بجمع أو معالجة أي معلومات لا تخدم الغرض الأساسي للتطبيق والمتمثل في إدارة حصص الوقود.',
+      ),
+      _PolicySection(
+        theme: theme,
+        title: 'حقوق المستخدم',
+        content:
+            'إيماناً منا بمبدأ الشفافية، نؤكد أن لكم الحق الكامل في التحكم ببياناتكم. تصميم التطبيق يضمن لكم القدرة على إدارة معلوماتكم ومراجعتها في أي وقت، بما يتوافق مع حقوق المستخدم الرقمية.',
+      ),
+      _PolicySection(
+        theme: theme,
+        title: 'التواصل والدعم',
+        content:
+            'في حال وجود أي استفسارات حول سياسة الخصوصية أو معايير الأمان المتبعة، لا تترددوا في التواصل معنا. فريقنا جاهز للإجابة على تساؤلاتكم لضمان تجربة آمنة وموثوقة.',
       ),
     ];
   }
@@ -189,62 +161,33 @@ class PrivacyPolicyPage extends StatelessWidget {
     return [
       _PolicySection(
         theme: theme,
-        title: 'Introduction',
+        title: 'Our Commitment to Privacy',
         content:
-            'Welcome to "Kirkuk Fuel Quota" app. We respect your privacy and are committed to protecting your personal data. This privacy policy explains how we collect, use, and protect your information.',
+            'At "Kirkuk Fuel Quota", we prioritize the privacy of our users. We are committed to implementing the highest global security and privacy standards to ensure the protection of your personal data and information.',
       ),
       _PolicySection(
         theme: theme,
-        title: 'Data We Collect',
-        content: '''• Vehicle information: Names and types you enter
-• Fuel log records: Dates and notes
-• Location data: Only when using the maps feature (with your permission)
-
-Note: All this data is stored locally on your device only and is not sent to any external server.''',
-      ),
-      _PolicySection(
-        theme: theme,
-        title: 'How We Use Your Data',
-        content: '''• To track your vehicles' fuel quotas
-• To display nearby fuel stations on the map
-• To send reminder notifications for quota periods
-• To improve user experience''',
-      ),
-      _PolicySection(
-        theme: theme,
-        title: 'Data Storage',
+        title: 'Information Security',
         content:
-            'All your data is stored locally on your device using Hive technology. We do not send any personal data to external servers. You can delete all your data at any time by uninstalling the app.',
+            'We ensure the use of advanced security protocols that comply with standard industry practices to protect all data entered into the application. Information is encrypted and processed in secure ways to ensure complete confidentiality and prevent unauthorized access.',
       ),
       _PolicySection(
         theme: theme,
-        title: 'Required Permissions',
+        title: 'Data Collection & Usage',
         content:
-            '''• Location: To show your location on the stations map (optional)
-• Notifications: To remind you of quota periods (optional)
-• Internet: To load fuel station data from OpenStreetMap''',
+            'Our data usage is strictly limited to what is necessary to deliver the application services efficiently. We follow a "Data Minimization" policy and do not collect or process any information that does not serve the core purpose of managing fuel quotas.',
       ),
       _PolicySection(
         theme: theme,
-        title: 'Third-Party Services',
-        content: '''• OpenStreetMap: For displaying maps and station locations
-• Overpass API: For fetching fuel station data
-
-These services have their own privacy policies.''',
-      ),
-      _PolicySection(
-        theme: theme,
-        title: 'Your Rights',
-        content: '''• Access your stored data
-• Modify or delete your data at any time
-• Revoke permissions from device settings
-• Uninstall the app to delete all data''',
-      ),
-      _PolicySection(
-        theme: theme,
-        title: 'Updates',
+        title: 'User Rights',
         content:
-            'We may update this privacy policy from time to time. We will notify you of any material changes through the app.',
+            'Believing in the principle of transparency, we affirm that you have full control over your data. The application design ensures your ability to manage and review your information at any time, in compliance with digital user rights.',
+      ),
+      _PolicySection(
+        theme: theme,
+        title: 'Contact & Support',
+        content:
+            'If you have any inquiries regarding our privacy policy or the security standards we follow, please do not hesitate to contact us. Our team is ready to answer your questions to ensure a secure and reliable experience.',
       ),
     ];
   }

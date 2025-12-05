@@ -331,55 +331,114 @@ class _VehicleTypeSelector extends StatelessWidget {
       itemBuilder: (context, index) {
         final type = VehicleType.values[index];
         final isSelected = type == selectedType;
+        final isDisabled =
+            type == VehicleType.taxi || type == VehicleType.public;
 
         return GestureDetector(
-          onTap: () => onChanged(type),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            decoration: BoxDecoration(
-              color: isSelected
-                  ? type.color.withValues(alpha: 0.15)
-                  : Colors.transparent,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: isSelected
-                    ? type.color
-                    : Colors.grey.withValues(alpha: 0.3),
-                width: isSelected ? 2 : 1,
-              ),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+          onTap: () {
+            if (isDisabled) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    languageCode == 'ar' ? 'سيتوفر قريباً' : 'Coming Soon',
+                  ),
+                  duration: const Duration(seconds: 1),
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+              return;
+            }
+            onChanged(type);
+          },
+          child: Opacity(
+            opacity: isDisabled ? 0.5 : 1.0,
+            child: Stack(
+              fit: StackFit.expand,
               children: [
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
-                  padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     color: isSelected
-                        ? type.color
-                        : Colors.grey.withValues(alpha: 0.1),
-                    shape: BoxShape.circle,
+                        ? type.color.withValues(alpha: 0.15)
+                        : Colors.transparent,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: isSelected
+                          ? type.color
+                          : isDisabled
+                          ? Colors.grey.withValues(alpha: 0.1)
+                          : Colors.grey.withValues(alpha: 0.3),
+                      width: isSelected ? 2 : 1,
+                    ),
                   ),
-                  child: Icon(
-                    type.icon,
-                    color: isSelected ? Colors.white : Colors.grey,
-                    size: 22,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: isSelected
+                              ? type.color
+                              : isDisabled
+                              ? Colors.grey.withValues(alpha: 0.1)
+                              : Colors.grey.withValues(alpha: 0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          type.icon,
+                          color: isSelected
+                              ? Colors.white
+                              : isDisabled
+                              ? Colors.grey
+                              : Colors.grey,
+                          size: 22,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        type.getLocalizedName(languageCode),
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: isSelected
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                          color: isSelected
+                              ? type.color
+                              : isDisabled
+                              ? Colors.grey
+                              : Colors.grey,
+                        ),
+                        textAlign: TextAlign.center,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 6),
-                Text(
-                  type.getLocalizedName(languageCode),
-                  style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: isSelected
-                        ? FontWeight.bold
-                        : FontWeight.normal,
-                    color: isSelected ? type.color : Colors.grey,
+                if (isDisabled)
+                  Positioned(
+                    top: 4,
+                    left: 4,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 4,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: const Text(
+                        'Soon',
+                        style: TextStyle(
+                          fontSize: 8,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
                   ),
-                  textAlign: TextAlign.center,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
               ],
             ),
           ),

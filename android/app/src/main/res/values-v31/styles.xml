@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- الثيم الرئيسي - إخفاء سبلاش أندرويد 12 بسرعة -->
+    <!-- الثيم الرئيسي -->
     <style name="NormalTheme" parent="@android:style/Theme.Light.NoTitleBar">
         <item name="android:windowBackground">@android:color/white</item>
-        <!-- إخفاء سبلاش أندرويد 12 فوراً -->
-        <item name="android:windowSplashScreenAnimationDuration">0</item>
     </style>
     <!-- للتوافق فقط -->
     <style name="LaunchTheme" parent="NormalTheme">
         <item name="android:forceDarkAllowed">false</item>
-        <item name="android:windowFullscreen">true</item>
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">false</item>
         <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
         <item name="android:windowSplashScreenBackground">#FFFFFF</item>
-        <item name="android:windowSplashScreenAnimatedIcon">@drawable/android12splash</item>
-        <item name="android:windowSplashScreenIconBackgroundColor">#FFFFFF</item>
     </style>
 </resources>

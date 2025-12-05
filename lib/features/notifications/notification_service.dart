@@ -81,27 +81,16 @@ class NotificationService {
   Future<void> scheduleQuotaStartNotification(Vehicle vehicle) async {
     if (!_isInitialized) await initialize();
 
-    final quotaWindow = QuotaCalculator.getCurrentQuotaWindow(
+    // Check if we should notify immediately for the current window
+    await checkAndNotifyIfQuotaActive(vehicle);
+
+    // Schedule for the NEXT window
+    // We always schedule for the next window regardless of current state
+    // so the user is set for the future.
+    final nextWindow = QuotaCalculator.getNextQuotaWindow(
       vehicle.firstQuotaStart,
       quotaLengthDays: vehicle.quotaLengthDays,
     );
-
-    // If the current window has already started, schedule for the next one
-    DateTime notificationTime;
-    if (quotaWindow.isActiveNow || quotaWindow.isPast) {
-      final nextWindow = QuotaCalculator.getNextQuotaWindow(
-        vehicle.firstQuotaStart,
-        quotaLengthDays: vehicle.quotaLengthDays,
-      );
-      notificationTime = nextWindow.start;
-    } else {
-      notificationTime = quotaWindow.start;
-    }
-
-    // Don't schedule if the time is in the past
-    if (notificationTime.isBefore(DateTime.now())) {
-      return;
-    }
 
     final vehicleName = vehicle.name ?? 'Your vehicle';
 
@@ -109,9 +98,34 @@ class NotificationService {
       id: _getStartNotificationId(vehicle.id),
       title: '⛽ Quota Open!',
       body: '$vehicleName\'s fuel quota is now open. Time to refuel!',
-      scheduledTime: notificationTime,
+      scheduledTime: nextWindow.start,
       payload: 'quota_start_${vehicle.id}',
     );
+  }
+
+  /// Check if quota is currently active and notify if needed
+  /// This is useful when adding a vehicle or opening the app during an active quota
+  Future<void> checkAndNotifyIfQuotaActive(Vehicle vehicle) async {
+    if (!_isInitialized) await initialize();
+
+    final quotaWindow = QuotaCalculator.getCurrentQuotaWindow(
+      vehicle.firstQuotaStart,
+      quotaLengthDays: vehicle.quotaLengthDays,
+    );
+
+    if (quotaWindow.isActiveNow) {
+      final vehicleName = vehicle.name ?? 'Your vehicle';
+
+      // Show immediate notification
+      await _showImmediateNotification(
+        id: _getStartNotificationId(
+          vehicle.id,
+        ), // Use same ID to avoid duplicates
+        title: '⛽ Quota Open Now!',
+        body: '$vehicleName\'s fuel quota is currently open!',
+        payload: 'quota_active_${vehicle.id}',
+      );
+    }
   }
 
   /// Schedule a reminder notification 6 hours before quota ends
@@ -223,10 +237,13 @@ class NotificationService {
     return vehicleId.hashCode + 1000000;
   }
 
-  /// Show an immediate notification (for testing)
-  Future<void> showTestNotification() async {
-    if (!_isInitialized) await initialize();
-
+  /// Show an immediate notification
+  Future<void> _showImmediateNotification({
+    required int id,
+    required String title,
+    required String body,
+    String? payload,
+  }) async {
     const androidDetails = AndroidNotificationDetails(
       'fuel_quota_channel',
       'Fuel Quota Notifications',
@@ -247,10 +264,20 @@ class NotificationService {
     );
 
     await _notifications.show(
-      0,
-      'Test Notification',
-      'Notifications are working!',
+      id,
+      title,
+      body,
       notificationDetails,
+      payload: payload,
+    );
+  }
+
+  /// Show an immediate notification (for testing)
+  Future<void> showTestNotification() async {
+    await _showImmediateNotification(
+      id: 0,
+      title: 'Test Notification',
+      body: 'Notifications are working!',
     );
   }
 }

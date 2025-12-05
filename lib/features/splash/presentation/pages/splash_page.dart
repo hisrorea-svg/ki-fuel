@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:provider/provider.dart';
 import 'package:ki_fuel/core/theme/app_colors.dart';
-import '../../../notifications/notification_service.dart';
-import '../../../vehicles/data/repositories/vehicle_repository.dart';
-import '../../../vehicles/logic/vehicle_controller.dart';
 import '../../../vehicles/presentation/pages/main_navigation_page.dart';
 
 class SplashPage extends StatefulWidget {
@@ -20,9 +15,6 @@ class _SplashPageState extends State<SplashPage>
   late final Animation<double> _fadeAnimation;
   late final Animation<double> _scaleAnimation;
   late final Animation<Offset> _slideAnimation;
-
-  VehicleRepository? _repository;
-  NotificationService? _notificationService;
 
   @override
   void initState() {
@@ -55,61 +47,27 @@ class _SplashPageState extends State<SplashPage>
 
     _controller.forward();
 
-    // تهيئة التطبيق والانتقال للصفحة الرئيسية
+    // الانتقال للصفحة الرئيسية
     _initializeAndNavigate();
   }
 
-  String? _errorMessage;
-
   Future<void> _initializeAndNavigate() async {
-    try {
-      // تهيئة Hive
-      await Hive.initFlutter();
+    // انتظار حد أدنى لعرض السبلاش (1.5 ثانية)
+    await Future.delayed(const Duration(milliseconds: 1500));
 
-      // تهيئة Repository
-      _repository = VehicleRepository();
-      await _repository!.initialize();
+    if (!mounted) return;
 
-      // تهيئة الإشعارات
-      _notificationService = NotificationService();
-      await _notificationService!.initialize();
-
-      // انتظار حد أدنى لعرض السبلاش (1.5 ثانية)
-      await Future.delayed(const Duration(milliseconds: 1500));
-
-      if (!mounted) return;
-
-      // الانتقال للصفحة الرئيسية مع Provider
-      Navigator.of(context).pushReplacement(
-        PageRouteBuilder(
-          pageBuilder: (context, animation, _) => ChangeNotifierProvider(
-            create: (_) => VehicleController(
-              repository: _repository!,
-              notificationService: _notificationService!,
-            )..loadVehicles(),
-            child: const MainNavigationPage(),
-          ),
-          transitionsBuilder: (_, animation, _, child) {
-            return FadeTransition(opacity: animation, child: child);
-          },
-          transitionDuration: const Duration(milliseconds: 400),
-        ),
-      );
-    } catch (e) {
-      if (!mounted) return;
-      setState(() {
-        _errorMessage = e.toString();
-      });
-    }
-  }
-
-  Future<void> _retryInitialization() async {
-    setState(() {
-      _errorMessage = null;
-    });
-    _controller.reset();
-    _controller.forward();
-    await _initializeAndNavigate();
+    // الانتقال للصفحة الرئيسية
+    // Provider تم توفيره في main.dart
+    Navigator.of(context).pushReplacement(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, _) => const MainNavigationPage(),
+        transitionsBuilder: (_, animation, _, child) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+        transitionDuration: const Duration(milliseconds: 400),
+      ),
+    );
   }
 
   @override
@@ -123,73 +81,6 @@ class _SplashPageState extends State<SplashPage>
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    // عرض شاشة الخطأ إذا فشل التهيئة
-    if (_errorMessage != null) {
-      return Scaffold(
-        body: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: isDark
-                  ? [AppColors.primaryDark, Colors.black]
-                  : [AppColors.primaryDark, AppColors.primary],
-            ),
-          ),
-          child: SafeArea(
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.error_outline,
-                      size: 64,
-                      color: Colors.white,
-                    ),
-                    const SizedBox(height: 24),
-                    const Text(
-                      'حدث خطأ أثناء تشغيل التطبيق',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      _errorMessage!,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.white.withValues(alpha: 0.8),
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 32),
-                    FilledButton.icon(
-                      onPressed: _retryInitialization,
-                      icon: const Icon(Icons.refresh),
-                      label: const Text('إعادة المحاولة'),
-                      style: FilledButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: AppColors.primary,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 12,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -201,6 +92,7 @@ class _SplashPageState extends State<SplashPage>
                 : [AppColors.primaryDark, AppColors.primary],
           ),
         ),
+
         child: SafeArea(
           child: Center(
             child: AnimatedBuilder(

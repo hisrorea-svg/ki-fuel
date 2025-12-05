@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../../notifications/logic/notifications_controller.dart';
+import '../../../notifications/presentation/pages/notifications_page.dart';
 import '../../../../core/localization/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../settings/presentation/pages/settings_page.dart';
@@ -16,10 +19,11 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
   int _selectedIndex = 0;
 
   // استخدام const للحفاظ على حالة الصفحات
-  final List<Widget> _pages = const [
-    VehiclesHomePage(),
-    MapsPage(),
-    SettingsPage(),
+  final List<Widget> _pages = [
+    const VehiclesHomePage(),
+    const MapsPage(),
+    const NotificationsPage(),
+    const SettingsPage(),
   ];
 
   void _onTabChanged(int index) {
@@ -66,11 +70,22 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
                 isSelected: _selectedIndex == 1,
                 onTap: () => _onTabChanged(1),
               ),
+              Consumer<NotificationsController>(
+                builder: (context, controller, child) {
+                  return _NavItem(
+                    icon: Icons.notifications_rounded,
+                    label: 'الإشعارات',
+                    isSelected: _selectedIndex == 2,
+                    onTap: () => _onTabChanged(2),
+                    badgeCount: controller.unreadCount,
+                  );
+                },
+              ),
               _NavItem(
                 icon: Icons.settings_rounded,
                 label: l10n.translate('settings'),
-                isSelected: _selectedIndex == 2,
-                onTap: () => _onTabChanged(2),
+                isSelected: _selectedIndex == 3,
+                onTap: () => _onTabChanged(3),
               ),
             ],
           ),
@@ -85,12 +100,14 @@ class _NavItem extends StatelessWidget {
   final String label;
   final bool isSelected;
   final VoidCallback onTap;
+  final int badgeCount;
 
   const _NavItem({
     required this.icon,
     required this.label,
     required this.isSelected,
     required this.onTap,
+    this.badgeCount = 0,
   });
 
   @override
@@ -114,10 +131,16 @@ class _NavItem extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                icon,
-                size: 24,
-                color: isSelected ? AppColors.primary : Colors.white70,
+              Badge(
+                isLabelVisible: badgeCount > 0,
+                label: Text('$badgeCount'),
+                backgroundColor: isSelected ? AppColors.primary : Colors.red,
+                textColor: isSelected ? Colors.white : Colors.white,
+                child: Icon(
+                  icon,
+                  size: 24,
+                  color: isSelected ? AppColors.primary : Colors.white70,
+                ),
               ),
               // AnimatedSize لانتقال سلس عند ظهور/إخفاء النص
               AnimatedSize(

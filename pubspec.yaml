@@ -59,13 +59,10 @@ flutter_launcher_icons:
 # إعدادات سبلاش أندرويد
 flutter_native_splash:
   color: "#FFFFFF"
-  image: assests/transparent.png
-  fullscreen: true
+  fullscreen: false
   android_12:
     color: "#FFFFFF"
-    image: assests/transparent.png
-    fullscreen: true
-    icon_background_color: "#FFFFFF"
+    fullscreen: false
 
 flutter:
   uses-material-design: true
