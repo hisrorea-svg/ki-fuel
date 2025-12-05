@@ -2,7 +2,7 @@ name: ki_fuel
 description: "Ki Fuel - Kirkuk Fuel Quota Tracker"
 publish_to: "none"
 
-version: 1.0.0+1
+version: 1.0.1+2
 
 environment:
   sdk: ^3.10.0-290.4.beta
