@@ -37,6 +37,13 @@ dependencies:
 
   # App info
   package_info_plus: ^8.0.0
+  firebase_core: ^4.2.1
+  firebase_messaging: ^16.0.4
+  firebase_analytics: ^12.0.4
+  firebase_crashlytics: ^5.0.5
+  cloud_firestore: ^6.1.0
+  firebase_remote_config: ^6.1.2
+  connectivity_plus: ^7.0.0
 
 dev_dependencies:
   flutter_test:

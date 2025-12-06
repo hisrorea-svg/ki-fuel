@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz_data;
 import '../vehicles/data/models/vehicle.dart';
@@ -15,6 +16,51 @@ class NotificationService {
       FlutterLocalNotificationsPlugin();
 
   bool _isInitialized = false;
+
+  /// الحصول على اللغة الحالية من الإعدادات المحفوظة
+  Future<String> _getCurrentLocale() async {
+    try {
+      final box = await Hive.openBox('settings');
+      return box.get('locale', defaultValue: 'ar') as String;
+    } catch (e) {
+      return 'ar';
+    }
+  }
+
+  /// الحصول على اسم السيارة المترجم
+  Future<String> _getVehicleName(Vehicle vehicle) async {
+    final locale = await _getCurrentLocale();
+    if (vehicle.name != null && vehicle.name!.isNotEmpty) {
+      return vehicle.name!;
+    }
+    return locale == 'ar' ? 'سيارتك' : 'Your vehicle';
+  }
+
+  /// الحصول على نصوص الإشعارات المترجمة
+  Future<Map<String, String>> _getNotificationTexts() async {
+    final locale = await _getCurrentLocale();
+    if (locale == 'ar') {
+      return {
+        'quota_open_title': '⛽ الحصة مفتوحة!',
+        'quota_open_body': 'حصة وقود {{name}} مفتوحة الآن. حان وقت التزود!',
+        'quota_open_now_title': '⛽ الحصة مفتوحة الآن!',
+        'quota_open_now_body': 'حصة وقود {{name}} مفتوحة حالياً!',
+        'quota_ending_title': '⏰ الحصة تنتهي قريباً!',
+        'quota_ending_body': 'حصة وقود {{name}} تغلق بعد 6 ساعات. لا تفوّتها!',
+      };
+    } else {
+      return {
+        'quota_open_title': '⛽ Quota Open!',
+        'quota_open_body':
+            '{{name}}\'s fuel quota is now open. Time to refuel!',
+        'quota_open_now_title': '⛽ Quota Open Now!',
+        'quota_open_now_body': '{{name}}\'s fuel quota is currently open!',
+        'quota_ending_title': '⏰ Quota Ending Soon!',
+        'quota_ending_body':
+            '{{name}}\'s fuel quota closes in 6 hours. Don\'t miss it!',
+      };
+    }
+  }
 
   /// Initialize the notification service
   Future<void> initialize() async {
@@ -92,12 +138,13 @@ class NotificationService {
       quotaLengthDays: vehicle.quotaLengthDays,
     );
 
-    final vehicleName = vehicle.name ?? 'Your vehicle';
+    final vehicleName = await _getVehicleName(vehicle);
+    final texts = await _getNotificationTexts();
 
     await _scheduleNotification(
       id: _getStartNotificationId(vehicle.id),
-      title: '⛽ Quota Open!',
-      body: '$vehicleName\'s fuel quota is now open. Time to refuel!',
+      title: texts['quota_open_title']!,
+      body: texts['quota_open_body']!.replaceAll('{{name}}', vehicleName),
       scheduledTime: nextWindow.start,
       payload: 'quota_start_${vehicle.id}',
     );
@@ -114,15 +161,16 @@ class NotificationService {
     );
 
     if (quotaWindow.isActiveNow) {
-      final vehicleName = vehicle.name ?? 'Your vehicle';
+      final vehicleName = await _getVehicleName(vehicle);
+      final texts = await _getNotificationTexts();
 
       // Show immediate notification
       await _showImmediateNotification(
         id: _getStartNotificationId(
           vehicle.id,
         ), // Use same ID to avoid duplicates
-        title: '⛽ Quota Open Now!',
-        body: '$vehicleName\'s fuel quota is currently open!',
+        title: texts['quota_open_now_title']!,
+        body: texts['quota_open_now_body']!.replaceAll('{{name}}', vehicleName),
         payload: 'quota_active_${vehicle.id}',
       );
     }
@@ -159,12 +207,13 @@ class NotificationService {
       return;
     }
 
-    final vehicleName = vehicle.name ?? 'Your vehicle';
+    final vehicleName = await _getVehicleName(vehicle);
+    final texts = await _getNotificationTexts();
 
     await _scheduleNotification(
       id: _getEndReminderNotificationId(vehicle.id),
-      title: '⏰ Quota Ending Soon!',
-      body: '$vehicleName\'s fuel quota closes in 6 hours. Don\'t miss it!',
+      title: texts['quota_ending_title']!,
+      body: texts['quota_ending_body']!.replaceAll('{{name}}', vehicleName),
       scheduledTime: reminderTime,
       payload: 'quota_reminder_${vehicle.id}',
     );

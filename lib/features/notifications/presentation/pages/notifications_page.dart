@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import '../../../../core/localization/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../logic/notifications_controller.dart';
 import '../../data/models/notification_model.dart';
@@ -10,21 +11,23 @@ class NotificationsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('الإشعارات'),
+        title: Text(l10n.translate('notifications_page_title')),
         centerTitle: true,
         actions: [
           IconButton(
             icon: const Icon(Icons.done_all),
-            tooltip: 'تحديد الكل كمقروء',
+            tooltip: l10n.translate('mark_all_read'),
             onPressed: () {
               context.read<NotificationsController>().markAllAsRead();
             },
           ),
           IconButton(
             icon: const Icon(Icons.delete_sweep),
-            tooltip: 'مسح الكل',
+            tooltip: l10n.translate('clear_all'),
             onPressed: () {
               _showClearAllDialog(context);
             },
@@ -49,7 +52,7 @@ class NotificationsPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'لا توجد إشعارات حالياً',
+                    l10n.translate('no_notifications'),
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       color: Theme.of(context).colorScheme.outline,
                     ),
@@ -74,22 +77,24 @@ class NotificationsPage extends StatelessWidget {
   }
 
   void _showClearAllDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('مسح جميع الإشعارات؟'),
-        content: const Text('هل أنت متأكد من حذف سجل الإشعارات بالكامل؟'),
+        title: Text(l10n.translate('clear_all_notifications')),
+        content: Text(l10n.translate('clear_all_notifications_confirm')),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('إلغاء'),
+            child: Text(l10n.translate('cancel')),
           ),
           FilledButton(
             onPressed: () {
               context.read<NotificationsController>().clearAll();
               Navigator.pop(context);
             },
-            child: const Text('مسح'),
+            child: Text(l10n.translate('clear')),
           ),
         ],
       ),

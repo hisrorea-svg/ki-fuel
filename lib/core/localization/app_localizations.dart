@@ -46,6 +46,8 @@ class AppLocalizations {
       'waiting_to_start': 'في انتظار البدء',
 
       // الوقت
+      'to': 'إلى',
+      'day_short': 'ي',
       'seconds': 'ثانية',
       'day': 'يوم',
       'days': 'أيام',
@@ -146,6 +148,7 @@ class AppLocalizations {
       // شريط التنقل
       'home': 'الرئيسية',
       'maps': 'الخرائط',
+      'notifications': 'الإشعارات',
       'settings': 'الإعدادات',
       'maps_coming_soon': 'خريطة محطات الوقود قادمة قريباً',
 
@@ -171,6 +174,9 @@ class AppLocalizations {
       'whats_new': 'ما الجديد',
       'later': 'لاحقاً',
       'download_update': 'تحميل التحديث',
+      'update_required': 'تحديث مطلوب',
+      'update_required_message': 'يرجى تحديث التطبيق للاستمرار في استخدامه',
+      'latest_version': 'أحدث إصدار',
       'support': 'الدعم',
       'contact_support': 'تواصل معنا',
       'cannot_open_email': 'لا يمكن فتح البريد الإلكتروني',
@@ -182,6 +188,72 @@ class AppLocalizations {
       'contact_us': 'تواصل معنا',
       'privacy_contact_message':
           'إذا كان لديك أي استفسار حول سياسة الخصوصية، لا تتردد في التواصل معنا عبر historea@proton.me',
+
+      // الإشعارات
+      'your_vehicle': 'سيارتك',
+      'notification_quota_open': 'الحصة مفتوحة!',
+      'notification_quota_open_body':
+          'حصة وقود {{name}} مفتوحة الآن. حان وقت التزود!',
+      'notification_quota_open_now': 'الحصة مفتوحة الآن!',
+      'notification_quota_open_now_body': 'حصة وقود {{name}} مفتوحة حالياً!',
+      'notification_quota_ending': 'الحصة تنتهي قريباً!',
+      'notification_quota_ending_body':
+          'حصة وقود {{name}} تغلق بعد 6 ساعات. لا تفوّتها!',
+
+      // صفحة الإشعارات
+      'notifications_page_title': 'الإشعارات',
+      'mark_all_read': 'تحديد الكل كمقروء',
+      'clear_all': 'مسح الكل',
+      'no_notifications': 'لا توجد إشعارات حالياً',
+      'clear_all_notifications': 'مسح جميع الإشعارات؟',
+      'clear_all_notifications_confirm':
+          'هل أنت متأكد من حذف سجل الإشعارات بالكامل؟',
+      'clear': 'مسح',
+
+      // البلاغات
+      'reports': 'البلاغات',
+      'reports_subtitle': 'الإبلاغ عن مشاكل المحطات',
+      'reports_disabled': 'البلاغات غير متاحة حالياً',
+      'reports_disabled_message':
+          'تم تعطيل نظام البلاغات مؤقتاً، يرجى المحاولة لاحقاً',
+      'report_problem': 'الإبلاغ عن مشكلة',
+      'report_description':
+          'ساعدنا في تحسين الخدمة بالإبلاغ عن مشاكل محطات الوقود',
+      'report_type': 'نوع البلاغ',
+      'report_details': 'تفاصيل البلاغ',
+      'station_name': 'اسم المحطة',
+      'station_name_hint': 'مثال: محطة الكرامة',
+      'location': 'الموقع',
+      'location_hint': 'مثال: شارع أطلس، كركوك',
+      'additional_details': 'تفاصيل إضافية',
+      'additional_details_hint': 'اكتب أي معلومات إضافية تساعدنا...',
+      'station_closed': 'محطة مغلقة',
+      'station_crowded': 'ازدحام شديد',
+      'out_of_fuel': 'نفاد الوقود',
+      'price_issue': 'مشكلة في السعر',
+      'other_issue': 'أخرى',
+      'send_report': 'إرسال البلاغ',
+      'sending': 'جارِ الإرسال...',
+      'report_note': 'سيتم مراجعة البلاغ والتعامل معه في أقرب وقت',
+      'please_fill_details': 'يرجى ملء بعض التفاصيل',
+      'fuel_report': 'بلاغ وقود',
+      'sent_from_app': 'تم الإرسال من تطبيق Ki Fuel',
+      'report_opened_in_email': 'تم فتح البلاغ في تطبيق البريد',
+      'report_sent_successfully': 'تم إرسال البلاغ بنجاح ✓',
+      'error_sending_report': 'حدث خطأ في إرسال البلاغ',
+      'no_internet_connection': 'لا يوجد اتصال بالإنترنت',
+      'permission_denied_error': 'ليس لديك صلاحية لإرسال البلاغ',
+      'network_error': 'خطأ في الشبكة، يرجى المحاولة لاحقاً',
+      'timeout_error': 'انتهت مهلة الاتصال، يرجى المحاولة مجدداً',
+      'report_will_send_when_online': 'سيتم إرسال البلاغ عند عودة الاتصال',
+      'report_pending_offline': 'بلاغ معلق - سيرسل عند عودة الاتصال',
+
+      // اللغة
+      'language': 'اللغة',
+      'language_subtitle': 'تغيير لغة التطبيق',
+      'arabic': 'العربية',
+      'english': 'English',
+      'select_language': 'اختر اللغة',
     },
     'en': {
       // General
@@ -215,6 +287,8 @@ class AppLocalizations {
       'waiting_to_start': 'Waiting to start',
 
       // Time
+      'to': 'to',
+      'day_short': 'd',
       'seconds': 'sec',
       'day': 'day',
       'days': 'days',
@@ -316,6 +390,7 @@ class AppLocalizations {
       // Navigation
       'home': 'Home',
       'maps': 'Maps',
+      'notifications': 'Notifications',
       'settings': 'Settings',
       'maps_coming_soon': 'Fuel stations map coming soon',
 
@@ -341,6 +416,9 @@ class AppLocalizations {
       'whats_new': 'What\'s New',
       'later': 'Later',
       'download_update': 'Download Update',
+      'update_required': 'Update Required',
+      'update_required_message': 'Please update the app to continue using it',
+      'latest_version': 'Latest Version',
       'support': 'Support',
       'contact_support': 'Contact Us',
       'cannot_open_email': 'Cannot open email app',
@@ -352,6 +430,73 @@ class AppLocalizations {
       'contact_us': 'Contact Us',
       'privacy_contact_message':
           'If you have any questions about the privacy policy, feel free to contact us at historea@proton.me',
+
+      // Notifications
+      'your_vehicle': 'Your vehicle',
+      'notification_quota_open': 'Quota Open!',
+      'notification_quota_open_body':
+          '{{name}}\'s fuel quota is now open. Time to refuel!',
+      'notification_quota_open_now': 'Quota Open Now!',
+      'notification_quota_open_now_body':
+          '{{name}}\'s fuel quota is currently open!',
+      'notification_quota_ending': 'Quota Ending Soon!',
+      'notification_quota_ending_body':
+          '{{name}}\'s fuel quota closes in 6 hours. Don\'t miss it!',
+
+      // Notifications Page
+      'notifications_page_title': 'Notifications',
+      'mark_all_read': 'Mark all as read',
+      'clear_all': 'Clear all',
+      'no_notifications': 'No notifications yet',
+      'clear_all_notifications': 'Clear all notifications?',
+      'clear_all_notifications_confirm':
+          'Are you sure you want to delete all notifications?',
+      'clear': 'Clear',
+
+      // Reports
+      'reports': 'Reports',
+      'reports_subtitle': 'Report station problems',
+      'reports_disabled': 'Reports Unavailable',
+      'reports_disabled_message':
+          'The reports system is temporarily disabled, please try again later',
+      'report_problem': 'Report a Problem',
+      'report_description': 'Help us improve by reporting fuel station issues',
+      'report_type': 'Report Type',
+      'report_details': 'Report Details',
+      'station_name': 'Station Name',
+      'station_name_hint': 'e.g., Al-Karama Station',
+      'location': 'Location',
+      'location_hint': 'e.g., Atlas Street, Kirkuk',
+      'additional_details': 'Additional Details',
+      'additional_details_hint': 'Write any additional information...',
+      'station_closed': 'Station Closed',
+      'station_crowded': 'Very Crowded',
+      'out_of_fuel': 'Out of Fuel',
+      'price_issue': 'Price Issue',
+      'other_issue': 'Other',
+      'send_report': 'Send Report',
+      'sending': 'Sending...',
+      'report_note':
+          'The report will be reviewed and handled as soon as possible',
+      'please_fill_details': 'Please fill in some details',
+      'fuel_report': 'Fuel Report',
+      'sent_from_app': 'Sent from Ki Fuel app',
+      'report_opened_in_email': 'Report opened in email app',
+      'report_sent_successfully': 'Report sent successfully ✓',
+      'error_sending_report': 'Error sending report',
+      'no_internet_connection': 'No internet connection',
+      'permission_denied_error': 'You don\'t have permission to send report',
+      'network_error': 'Network error, please try again later',
+      'timeout_error': 'Connection timed out, please try again',
+      'report_will_send_when_online': 'Report will be sent when back online',
+      'report_pending_offline': 'Report pending - will send when online',
+
+      // Language
+      'language': 'Language',
+      'language_subtitle': 'Change app language',
+      'arabic': 'العربية',
+      'english': 'English',
+      'select_language': 'Select Language',
     },
   };
 

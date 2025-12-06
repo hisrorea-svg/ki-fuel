@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/localization/app_localizations.dart';
+import '../../../../core/localization/locale_provider.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../reports/presentation/pages/reports_page.dart';
 import '../services/github_update_service.dart';
 import 'privacy_policy_page.dart';
 
@@ -87,6 +90,44 @@ class _SettingsPageState extends State<SettingsPage> {
                       )
                     : const Icon(Icons.chevron_left),
                 onTap: _checkForUpdates,
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 16),
+
+          // اللغة
+          _SettingsCard(
+            title: l10n.translate('language'),
+            children: [
+              Consumer<LocaleProvider>(
+                builder: (context, localeProvider, _) => _SettingsTile(
+                  icon: Icons.language_rounded,
+                  iconColor: Colors.purple,
+                  title: l10n.translate('language'),
+                  subtitle: localeProvider.isArabic
+                      ? l10n.translate('arabic')
+                      : l10n.translate('english'),
+                  trailing: const Icon(Icons.chevron_left),
+                  onTap: () => _showLanguageDialog(context),
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 16),
+
+          // البلاغات
+          _SettingsCard(
+            title: l10n.translate('reports'),
+            children: [
+              _SettingsTile(
+                icon: Icons.campaign_rounded,
+                iconColor: Colors.orange,
+                title: l10n.translate('reports'),
+                subtitle: l10n.translate('reports_subtitle'),
+                trailing: const Icon(Icons.chevron_left),
+                onTap: () => _openReportsPage(context),
               ),
             ],
           ),
@@ -292,6 +333,55 @@ class _SettingsPageState extends State<SettingsPage> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const PrivacyPolicyPage()),
+    );
+  }
+
+  void _openReportsPage(BuildContext context) {
+    HapticFeedback.lightImpact();
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const ReportsPage()),
+    );
+  }
+
+  void _showLanguageDialog(BuildContext context) {
+    HapticFeedback.lightImpact();
+    final l10n = AppLocalizations.of(context);
+    final localeProvider = Provider.of<LocaleProvider>(context, listen: false);
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.translate('select_language')),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Text('🇮🇶', style: TextStyle(fontSize: 24)),
+              title: Text(l10n.translate('arabic')),
+              trailing: localeProvider.isArabic
+                  ? const Icon(Icons.check, color: AppColors.primary)
+                  : null,
+              onTap: () {
+                localeProvider.setLocale(const Locale('ar'));
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Text('🇺🇸', style: TextStyle(fontSize: 24)),
+              title: Text(l10n.translate('english')),
+              trailing: !localeProvider.isArabic
+                  ? const Icon(Icons.check, color: AppColors.primary)
+                  : null,
+              onTap: () {
+                localeProvider.setLocale(const Locale('en'));
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

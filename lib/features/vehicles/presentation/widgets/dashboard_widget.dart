@@ -200,7 +200,7 @@ class _UnifiedCard extends StatelessWidget {
             ),
             if (subContent != null) ...[
               Text(
-                'إلى',
+                AppLocalizations.of(context).translate('to'),
                 style: TextStyle(
                   fontSize: 9,
                   color: theme.colorScheme.onSurfaceVariant,

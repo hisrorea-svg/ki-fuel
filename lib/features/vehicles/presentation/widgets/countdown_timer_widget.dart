@@ -295,7 +295,7 @@ class _QuotaStatusSection extends StatelessWidget {
 
         // التاريخ من - إلى (على سطرين)
         Text(
-          dateRangeText.replaceAll(' - ', '\nإلى\n'),
+          dateRangeText.replaceAll(' - ', '\n${l10n.translate('to')}\n'),
           style: theme.textTheme.bodySmall?.copyWith(
             color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.7),
             fontWeight: FontWeight.bold,
@@ -500,8 +500,10 @@ class _CompactTimer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final dayLabel = l10n.translate('day_short');
     final timeText = days > 0
-        ? '$daysي ${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}'
+        ? '$days$dayLabel ${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}'
         : '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
 
     return Container(

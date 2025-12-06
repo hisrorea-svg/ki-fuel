@@ -1,10 +1,17 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'core/localization/app_localizations.dart';
+import 'core/localization/locale_provider.dart';
 import 'core/theme/app_theme.dart';
+import 'core/services/connectivity_service.dart';
+import 'core/services/crashlytics_service.dart';
+import 'core/services/firebase_messaging_service.dart';
+import 'core/services/remote_config_service.dart';
 import 'features/notifications/data/models/notification_model.dart';
 import 'features/notifications/data/repositories/notification_repository.dart';
 import 'features/notifications/logic/notifications_controller.dart';
@@ -13,14 +20,55 @@ import 'features/splash/presentation/pages/splash_page.dart';
 import 'features/vehicles/data/repositories/vehicle_repository.dart';
 import 'features/vehicles/logic/vehicle_controller.dart';
 
+/// Handler for background messages (must be top-level function)
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  debugPrint('Background message: ${message.messageId}');
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase
+  await Firebase.initializeApp();
+
+  // Initialize Crashlytics (يجب أن يكون بعد Firebase مباشرة)
+  try {
+    final crashlytics = CrashlyticsService();
+    await crashlytics.initialize();
+  } catch (e) {
+    debugPrint('Crashlytics init error: $e');
+  }
+
+  // Initialize Remote Config
+  try {
+    final remoteConfig = RemoteConfigService();
+    await remoteConfig.initialize();
+  } catch (e) {
+    debugPrint('RemoteConfig init error: $e');
+  }
+
+  // Initialize Connectivity Service
+  try {
+    final connectivityService = ConnectivityService();
+    await connectivityService.initialize();
+  } catch (e) {
+    debugPrint('Connectivity init error: $e');
+  }
+
+  // Setup Firebase Messaging
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   // Initialize Hive
   await Hive.initFlutter();
   if (!Hive.isAdapterRegistered(2)) {
     Hive.registerAdapter(NotificationModelAdapter());
   }
+
+  // Initialize Locale Provider
+  final localeProvider = LocaleProvider();
+  await localeProvider.initialize();
 
   // Initialize Repositories
   final repository = VehicleRepository();
@@ -32,6 +80,16 @@ void main() async {
   // Initialize Local Notifications Service
   final notificationService = NotificationService();
   await notificationService.initialize();
+
+  // Initialize Firebase Cloud Messaging
+  try {
+    final firebaseMessaging = FirebaseMessagingService();
+    await firebaseMessaging.initialize();
+    // Subscribe to general topic for all users
+    await firebaseMessaging.subscribeToTopic('all_users');
+  } catch (e) {
+    debugPrint('FCM init error: $e');
+  }
 
   // Create Controllers
   final notificationsController = NotificationsController(
@@ -51,6 +109,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider.value(value: localeProvider),
         ChangeNotifierProvider.value(value: vehicleController),
         ChangeNotifierProvider.value(value: notificationsController),
       ],
@@ -64,26 +123,30 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Ki Fuel',
-      debugShowCheckedModeBanner: false,
+    return Consumer<LocaleProvider>(
+      builder: (context, localeProvider, child) {
+        return MaterialApp(
+          title: 'Ki Fuel',
+          debugShowCheckedModeBanner: false,
 
-      // إعدادات اللغة العربية
-      locale: const Locale('ar'),
-      supportedLocales: const [Locale('ar'), Locale('en')],
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
+          // إعدادات اللغة
+          locale: localeProvider.locale,
+          supportedLocales: const [Locale('ar'), Locale('en')],
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
 
-      // الثيم
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.system,
+          // الثيم
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          themeMode: ThemeMode.system,
 
-      home: const SplashPage(),
+          home: const SplashPage(),
+        );
+      },
     );
   }
 }
