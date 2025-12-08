@@ -41,21 +41,11 @@ void main() async {
     debugPrint('Crashlytics init error: $e');
   }
 
-  // Initialize Remote Config
-  try {
-    final remoteConfig = RemoteConfigService();
-    await remoteConfig.initialize();
-  } catch (e) {
-    debugPrint('RemoteConfig init error: $e');
-  }
+  // Initialize Remote Config (Background)
+  _initializeRemoteConfig();
 
-  // Initialize Connectivity Service
-  try {
-    final connectivityService = ConnectivityService();
-    await connectivityService.initialize();
-  } catch (e) {
-    debugPrint('Connectivity init error: $e');
-  }
+  // Initialize Connectivity Service (Background)
+  _initializeConnectivity();
 
   // Setup Firebase Messaging
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -81,30 +71,23 @@ void main() async {
   final notificationService = NotificationService();
   await notificationService.initialize();
 
-  // Initialize Firebase Cloud Messaging
-  try {
-    final firebaseMessaging = FirebaseMessagingService();
-    await firebaseMessaging.initialize();
-    // Subscribe to general topic for all users
-    await firebaseMessaging.subscribeToTopic('all_users');
-  } catch (e) {
-    debugPrint('FCM init error: $e');
-  }
+  // Initialize Firebase Cloud Messaging (Background)
+  _initializeFCM();
 
   // Create Controllers
   final notificationsController = NotificationsController(
     repository: notificationRepository,
   );
-  // Load saved notifications
-  await notificationsController.loadNotifications();
+  // Load saved notifications (Background)
+  notificationsController.loadNotifications();
 
   final vehicleController = VehicleController(
     repository: repository,
     notificationService: notificationService,
     notificationsController: notificationsController,
   );
-  // Load initial data
-  await vehicleController.loadVehicles();
+  // Load initial data (Background)
+  vehicleController.loadVehicles();
 
   runApp(
     MultiProvider(
@@ -148,5 +131,34 @@ class MyApp extends StatelessWidget {
         );
       },
     );
+  }
+}
+
+Future<void> _initializeRemoteConfig() async {
+  try {
+    final remoteConfig = RemoteConfigService();
+    await remoteConfig.initialize();
+  } catch (e) {
+    debugPrint('RemoteConfig init error: $e');
+  }
+}
+
+Future<void> _initializeConnectivity() async {
+  try {
+    final connectivityService = ConnectivityService();
+    await connectivityService.initialize();
+  } catch (e) {
+    debugPrint('Connectivity init error: $e');
+  }
+}
+
+Future<void> _initializeFCM() async {
+  try {
+    final firebaseMessaging = FirebaseMessagingService();
+    await firebaseMessaging.initialize();
+    // Subscribe to general topic for all users
+    await firebaseMessaging.subscribeToTopic('all_users');
+  } catch (e) {
+    debugPrint('FCM init error: $e');
   }
 }

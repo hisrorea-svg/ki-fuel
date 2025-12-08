@@ -53,7 +53,7 @@ class _SplashPageState extends State<SplashPage>
 
   Future<void> _initializeAndNavigate() async {
     // انتظار حد أدنى لعرض السبلاش (1.5 ثانية)
-    await Future.delayed(const Duration(milliseconds: 1500));
+    await Future.delayed(const Duration(milliseconds: 2000));
 
     if (!mounted) return;
 
@@ -63,9 +63,21 @@ class _SplashPageState extends State<SplashPage>
       PageRouteBuilder(
         pageBuilder: (context, animation, _) => const MainNavigationPage(),
         transitionsBuilder: (_, animation, _, child) {
-          return FadeTransition(opacity: animation, child: child);
+          const begin = 0.9;
+          const end = 1.0;
+          const curve = Curves.easeOutCubic;
+
+          var tween = Tween(
+            begin: begin,
+            end: end,
+          ).chain(CurveTween(curve: curve));
+
+          return ScaleTransition(
+            scale: animation.drive(tween),
+            child: FadeTransition(opacity: animation, child: child),
+          );
         },
-        transitionDuration: const Duration(milliseconds: 400),
+        transitionDuration: const Duration(milliseconds: 800),
       ),
     );
   }
