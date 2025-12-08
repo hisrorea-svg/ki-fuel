@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/localization/app_localizations.dart';
 import '../../../../core/localization/locale_provider.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/theme_provider.dart';
 import '../../../reports/presentation/pages/reports_page.dart';
 import '../services/github_update_service.dart';
 import 'privacy_policy_page.dart';
@@ -117,7 +118,39 @@ class _SettingsPageState extends State<SettingsPage> {
 
           const SizedBox(height: 16),
 
-          // البلاغات
+          // المظهر
+          _SettingsCard(
+            title: l10n.translate('appearance'),
+            children: [
+              Consumer<ThemeProvider>(
+                builder: (context, themeProvider, _) => _SettingsTile(
+                  icon: themeProvider.isDarkMode
+                      ? Icons.dark_mode_rounded
+                      : Icons.light_mode_rounded,
+                  iconColor: themeProvider.isDarkMode
+                      ? Colors.indigo
+                      : Colors.amber,
+                  title: l10n.translate('dark_mode'),
+                  subtitle: themeProvider.isDarkMode
+                      ? l10n.translate('dark_mode_on')
+                      : l10n.translate('dark_mode_off'),
+                  trailing: Switch(
+                    value: themeProvider.isDarkMode,
+                    onChanged: (value) {
+                      HapticFeedback.lightImpact();
+                      themeProvider.setDarkMode(value);
+                    },
+                  ),
+                  onTap: () {
+                    HapticFeedback.lightImpact();
+                    themeProvider.toggleTheme();
+                  },
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 16),
           _SettingsCard(
             title: l10n.translate('reports'),
             children: [
@@ -456,7 +489,7 @@ class _AppInfoCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
-                '${l10n.translate('version')} ${packageInfo?.version ?? '...'} (${packageInfo?.buildNumber ?? '...'})',
+                '${l10n.translate('version')} ${packageInfo?.version ?? '...'}',
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),

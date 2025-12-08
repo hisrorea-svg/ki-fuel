@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'core/localization/app_localizations.dart';
 import 'core/localization/locale_provider.dart';
 import 'core/theme/app_theme.dart';
+import 'core/theme/theme_provider.dart';
 import 'core/services/connectivity_service.dart';
 import 'core/services/crashlytics_service.dart';
 import 'core/services/firebase_messaging_service.dart';
@@ -60,6 +61,10 @@ void main() async {
   final localeProvider = LocaleProvider();
   await localeProvider.initialize();
 
+  // Initialize Theme Provider
+  final themeProvider = ThemeProvider();
+  await themeProvider.initialize();
+
   // Initialize Repositories
   final repository = VehicleRepository();
   await repository.initialize();
@@ -93,6 +98,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: localeProvider),
+        ChangeNotifierProvider.value(value: themeProvider),
         ChangeNotifierProvider.value(value: vehicleController),
         ChangeNotifierProvider.value(value: notificationsController),
       ],
@@ -106,8 +112,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<LocaleProvider>(
-      builder: (context, localeProvider, child) {
+    return Consumer2<LocaleProvider, ThemeProvider>(
+      builder: (context, localeProvider, themeProvider, child) {
         return MaterialApp(
           title: 'Ki Fuel',
           debugShowCheckedModeBanner: false,
@@ -125,7 +131,7 @@ class MyApp extends StatelessWidget {
           // الثيم
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
-          themeMode: ThemeMode.system,
+          themeMode: themeProvider.themeMode,
 
           home: const SplashPage(),
         );

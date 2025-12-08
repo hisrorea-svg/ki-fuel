@@ -254,6 +254,12 @@ class AppLocalizations {
       'arabic': 'العربية',
       'english': 'English',
       'select_language': 'اختر اللغة',
+
+      // المظهر
+      'appearance': 'المظهر',
+      'dark_mode': 'الوضع الداكن',
+      'dark_mode_on': 'مفعّل',
+      'dark_mode_off': 'معطّل',
     },
     'en': {
       // General
@@ -497,6 +503,12 @@ class AppLocalizations {
       'arabic': 'العربية',
       'english': 'English',
       'select_language': 'Select Language',
+
+      // Appearance
+      'appearance': 'Appearance',
+      'dark_mode': 'Dark Mode',
+      'dark_mode_on': 'Enabled',
+      'dark_mode_off': 'Disabled',
     },
   };
 
