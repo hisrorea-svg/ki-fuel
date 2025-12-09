@@ -144,10 +144,29 @@ class _VehicleDetailPageState extends State<VehicleDetailPage> {
               ),
             ),
           ),
-          floatingActionButton: FloatingActionButton.extended(
-            onPressed: () => _navigateToAddFuelLog(context, vehicle.id),
-            icon: const Icon(Icons.add),
-            label: Text(l10n.addFuelLog),
+          floatingActionButton: Builder(
+            builder: (context) {
+              final isFueled = controller.isVehicleFueledInCurrentQuota(
+                vehicle.id,
+              );
+
+              return FloatingActionButton.extended(
+                onPressed: () {
+                  if (isFueled) {
+                    _showAlreadyFueledDialog(context, l10n);
+                  } else {
+                    _navigateToAddFuelLog(context, vehicle.id);
+                  }
+                },
+                icon: Icon(isFueled ? Icons.check : Icons.add),
+                label: Text(
+                  isFueled
+                      ? l10n.translate('already_fueled_in_quota')
+                      : l10n.addFuelLog,
+                ),
+                backgroundColor: isFueled ? Colors.grey : null,
+              );
+            },
           ),
         );
       },
@@ -166,6 +185,52 @@ class _VehicleDetailPageState extends State<VehicleDetailPage> {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => AddFuelLogPage(vehicleId: vehicleId),
+      ),
+    );
+  }
+
+  void _showAlreadyFueledDialog(BuildContext context, AppLocalizations l10n) {
+    final nextQuota = KirkukQuotaSystem.getNextQuota();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        icon: const Icon(Icons.info_outline, color: Colors.orange, size: 48),
+        title: Text(l10n.translate('already_fueled_in_quota')),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              l10n.translate('already_fueled_in_quota_message'),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primaryContainer,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.schedule, size: 20),
+                  const SizedBox(width: 8),
+                  Text(
+                    '${l10n.translate('next_quota_info')} ${nextQuota.start.day}/${nextQuota.start.month}/${nextQuota.start.year}',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(l10n.translate('cancel')),
+          ),
+        ],
       ),
     );
   }

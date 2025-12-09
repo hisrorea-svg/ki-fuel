@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:hive/hive.dart';
 import '../../../core/utils/kirkuk_quota_system.dart';
 import '../data/models/vehicle.dart';
 import '../data/models/fuel_log_entry.dart';
@@ -207,11 +208,17 @@ class VehicleController extends ChangeNotifier {
 
       // Notify user about fueling
       final vehicle = _vehicles.firstWhere((v) => v.id == vehicleId);
-      final vehicleName = vehicle.name ?? 'Your vehicle';
+      final vehicleName = vehicle.name ?? 'سيارتك';
+      final locale = await _getCurrentLocale();
+
+      final title = locale == 'ar' ? 'تم تسجيل تفويلة! ⛽' : 'Fuel Log Added! ⛽';
+      final body = locale == 'ar'
+          ? 'تم تسجيل تفويلة لـ $vehicleName بنجاح.'
+          : 'Fuel log for $vehicleName recorded successfully.';
 
       await _notificationsController.addNotification(
-        title: 'تم تسجيل تفويلة! ⛽',
-        body: 'تم تسجيل تفويلة لـ $vehicleName بنجاح.',
+        title: title,
+        body: body,
         vehicleId: vehicleId,
         type: 'fuel_log',
       );
@@ -249,19 +256,19 @@ class VehicleController extends ChangeNotifier {
       final quotaWindow = KirkukQuotaSystem.getCurrentQuota();
 
       if (quotaWindow.isActiveNow) {
-        final vehicleName = vehicle.name ?? 'Your vehicle';
-        // Check if we already have a recent notification for this?
-        // For simplicity, we just add it. The UI handles simple list.
-        // ideally we check if exists, but for now we just add.
-        // Actually, to avoid spam on every edit, maybe we should be careful.
-        // But the user requested "real notifications".
+        final vehicleName = vehicle.name ?? 'سيارتك';
+        final locale = await _getCurrentLocale();
 
-        // Let's only add if it's explicitly an "Add" action that called this.
-        // But this method receives no context.
-        // For now, let's add it. Most users won't edit vehicles repeatedly.
+        final title = locale == 'ar'
+            ? 'الحصة مفتوحة الآن! ⛽'
+            : 'Quota Open Now! ⛽';
+        final body = locale == 'ar'
+            ? 'حصة الوقود لـ $vehicleName مفتوحة حالياً. لا تنس التفويل!'
+            : '$vehicleName\'s fuel quota is now open. Don\'t forget to refuel!';
+
         await _notificationsController.addNotification(
-          title: 'الحصة مفتوحة الآن! ⛽',
-          body: 'حصة الوقود لـ $vehicleName مفتوحة حالياً. لا تنس التفويل!',
+          title: title,
+          body: body,
           vehicleId: vehicle.id,
           type: 'quota_start',
         );
@@ -308,5 +315,15 @@ class VehicleController extends ChangeNotifier {
   /// الحصول على سجلات التعبئة لسيارة معينة
   List<FuelLogEntry> getFuelLogsForVehicle(String vehicleId) {
     return _repository.getFuelLogsForVehicle(vehicleId);
+  }
+
+  /// الحصول على اللغة الحالية من الإعدادات المحفوظة
+  Future<String> _getCurrentLocale() async {
+    try {
+      final box = await Hive.openBox('settings');
+      return box.get('locale', defaultValue: 'ar') as String;
+    } catch (e) {
+      return 'ar';
+    }
   }
 }

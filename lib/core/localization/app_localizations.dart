@@ -138,6 +138,10 @@ class AppLocalizations {
       'save_fuel_log': 'حفظ التزود',
       'fuel_log_added': 'تمت إضافة سجل التزود',
       'future_date_error': 'لا يمكن اختيار تاريخ في المستقبل',
+      'already_fueled_in_quota': 'تم التعبئة في هذه الحصة',
+      'already_fueled_in_quota_message':
+          'لقد سجلت تعبئة لهذه السيارة في الحصة الحالية. انتظر الحصة القادمة لإضافة تعبئة جديدة.',
+      'next_quota_info': 'الحصة القادمة تبدأ:',
 
       // حذف السيارة
       'delete_vehicle': 'حذف السيارة',
@@ -386,6 +390,10 @@ class AppLocalizations {
       'save_fuel_log': 'Save Fuel Log',
       'fuel_log_added': 'Fuel log added',
       'future_date_error': 'Cannot select a future date',
+      'already_fueled_in_quota': 'Already fueled in this quota',
+      'already_fueled_in_quota_message':
+          'You have already recorded a fueling for this vehicle in the current quota. Wait for the next quota to add a new entry.',
+      'next_quota_info': 'Next quota starts:',
 
       // Delete vehicle
       'delete_vehicle': 'Delete Vehicle',

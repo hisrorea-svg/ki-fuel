@@ -217,6 +217,21 @@ class _AddFuelLogPageState extends State<AddFuelLogPage> {
 
   Future<void> _submit() async {
     final l10n = AppLocalizations.of(context);
+    final controller = context.read<VehicleController>();
+
+    // التحقق أولاً إذا السيارة مفولة بالفعل في الحصة الحالية
+    if (controller.isVehicleFueledInCurrentQuota(widget.vehicleId)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(l10n.translate('already_fueled_in_quota_message')),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.orange,
+          duration: const Duration(seconds: 4),
+        ),
+      );
+      Navigator.of(context).pop();
+      return;
+    }
 
     // التحقق من أن التاريخ ليس في المستقبل
     if (_dateTime.isAfter(DateTime.now())) {
@@ -231,8 +246,6 @@ class _AddFuelLogPageState extends State<AddFuelLogPage> {
     }
 
     setState(() => _isSubmitting = true);
-
-    final controller = context.read<VehicleController>();
 
     final success = await controller.addFuelLog(
       vehicleId: widget.vehicleId,
